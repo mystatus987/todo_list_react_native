@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import TaskItem from './components/TaskItem';
 export default function App() {
@@ -14,7 +14,19 @@ export default function App() {
             <TaskItem text = {'Task 2'}/>
         </View>
       </View>
+
+      {/* Write task seccsion */}
+      {/* solve the common problem of views that need to move out of the way of the virtual keyboard. 
+      It can automatically adjust either its height, position, or bottom padding based on the keyboard height. */}
+      <KeyboardAvoidingView
+        behavior={Platfrom.OS === "ios" ? "padding" : "height"}
+        style = {styles.inputTextWrapper}>
+          <TextInput style={styles.inputText} placeholder={'write you task here'}/>
+        </KeyboardAvoidingView>
+
     </View>
+
+    
   );
 }
 
