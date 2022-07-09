@@ -3,20 +3,7 @@ import { KeyboardAvoidingView, StyleSheet, FlatList, Text, View, TextInput, Touc
 import { Task } from './components/Task';
 
 export default function App() {
-  // const [task, setTask] = useState();
-  // const [taskItems, setTaskItems] = useState([]);
-
-  // const handleAddTask = () => {
-  //   Keyboard.dismiss();
-  //   setTaskItems([...taskItems, task])
-  //   setTask(null);
-  // }
-
-  // const completeTask = (index) => {
-  //   let itemsCopy = [...taskItems];
-  //   itemsCopy.splice(index, 1);
-  //   setTaskItems(itemsCopy)
-  // }
+  
 
   // application states array obj
   const [ListData, SetListData] = useState([])
@@ -30,7 +17,6 @@ export default function App() {
     let newItem = { id: newId, name: input, status: false }
     let newList = ListData.concat(newItem)
     SetListData(newList)
-    // txtInput.clear()
     // useEffect Hook
     // useEffect(() => console.log("updating"), [ListData])
   }
@@ -45,7 +31,7 @@ export default function App() {
     <View style={styles.container}>  
         {/* Today's Tasks */}
         <View style={styles.tasksWrapper}>
-          <Text style={styles.sectionTitle}>Today's tasks</Text>
+          <Text style={styles.title}>2Do list</Text>
           <View style={styles.items}>
 
             <FlatList
@@ -62,7 +48,7 @@ export default function App() {
       {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeTaskWrapper}
+        style={styles.textInputWrapper}
       >
         <TextInput style={styles.input} placeholder={'Write a task'} onChangeText={(value) => setInput(value)}/>
         <TouchableOpacity onPress={() => addItem()}>
@@ -86,14 +72,15 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     paddingHorizontal: 20,
   },
-  sectionTitle: {
+  title: {
     fontSize: 24,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
   items: {
     marginTop: 30,
   },
-  writeTaskWrapper: {
+  textInputWrapper: {
     position: 'absolute',
     bottom: 60,
     width: '100%',
@@ -120,5 +107,4 @@ const styles = StyleSheet.create({
     borderColor: '#C0C0C0',
     borderWidth: 1,
   },
-  addText: {},
 });
