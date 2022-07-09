@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 import TaskItem from './components/TaskItem';
 export default function App() {
   return (
@@ -20,7 +21,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#49334d',
   },
   taskWapper:{
     paddingTop: 80,
@@ -28,7 +29,11 @@ const styles = StyleSheet.create({
   },
   titleName:{
     fontSize:24,
-    fontWeight:'bold'
+    fontWeight:'bold',
+    color: '#FFF',
+    textAlign: 'center',
   },
-  itmes:{},
+  itmes:{
+    marginTop: 30
+  },
 });
