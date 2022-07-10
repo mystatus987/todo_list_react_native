@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, FlatList, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import { Task } from './components/Task';
-
+import { EmptyList } from './components/EmptyList';
 export default function App() {
-  
+
 
   // application states array obj
   const [ListData, SetListData] = useState([])
@@ -14,50 +14,71 @@ export default function App() {
   const addItem = () => {
     // use timestamp to create unique id
     let newId = new Date().getTime()
-    let newItem = { id: newId, name: input, status: false }
+    let newItem = {
+      id: newId,
+      name: input,
+      status: false
+    }
     let newList = ListData.concat(newItem)
     SetListData(newList)
     // useEffect Hook
     // useEffect(() => console.log("updating"), [ListData])
   }
 
+  const deleteItem = (itemId) => {
+    /*
+    find the item id 
+    remove item with the id from array (ListData)
+    setListData (new array)
+    */
+    const newList = ListData.filter((item) => {
+      if (item.id !== itemId) {
+        return item
+      }
+    })
+    //  setListData (new array)
+    SetListData(newList)
+    console.log(itemId)
+  }
+
 
   //function to render list item
   const renderItem = ({ item }) => (
-    <Task item = {item} />
+    <Task item={item} remove={deleteItem}/>
   )
 
   return (
-    <View style={styles.container}>  
-        {/* Today's Tasks */}
-        <View style={styles.tasksWrapper}>
-          <Text style={styles.title}>2Do list</Text>
-          <View style={styles.items}>
+    <View style={styles.container}>
+      {/* Today's Tasks */}
+      <View style={styles.tasksWrapper}>
+        <Text style={styles.title}>2Do list</Text>
+        <View style={styles.items}>
 
-            <FlatList
-              data={ListData}
-              keyExtractor={(item) => item.id}
-              renderItem={renderItem}
-            />
+          <FlatList
+            data={ListData}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            ListEmptyComponent={EmptyList}
+          />
 
-          </View>
         </View>
+      </View>
 
- 
-  {/* Write a task */}
+
+      {/* Write a task */}
       {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.textInputWrapper}
       >
-        <TextInput style={styles.input} placeholder={'Write a task'} onChangeText={(value) => setInput(value)}/>
+        <TextInput style={styles.input} placeholder={'Write a task'} onChangeText={(value) => setInput(value)} />
         <TouchableOpacity onPress={() => addItem()}>
           <View style={styles.addWrapper}>
             <Text style={styles.addText}>+</Text>
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-    
+
 
     </View>
   );

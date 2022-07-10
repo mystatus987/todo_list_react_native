@@ -7,10 +7,15 @@ export function Task(props) {
     <View style={styles.item}>
       <View style={styles.itemLeft}>
         <View style={styles.circule}></View>
-      {/* `display task ` */}
+        {/* `display task ` */}
         <Text style={styles.itemText}>{props.item.name}</Text>
       </View>
-      <View style={styles.circular}></View>
+      <TouchableOpacity onPress={ () => props.remove(props.item.id)}>
+        <View style={styles.circular}>
+          <Text>DELETE</Text>
+        </View>
+      </TouchableOpacity>
+
     </View>
   )
 }
@@ -42,7 +47,9 @@ const styles = StyleSheet.create({
     maxWidth: '80%',
   },
   circular: {
-   
+    borderColor: '#55BCF6',
+    borderWidth: 2,
+    borderRadius: 5,
   },
 });
 
