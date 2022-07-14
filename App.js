@@ -1,13 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { KeyboardAvoidingView, StyleSheet, FlatList, Text, View, TextInput, TouchableOpacity, } from 'react-native';
 import { Task } from './components/Task';
 import { EmptyList } from './components/EmptyList';
+import Storage from 'react-native-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function App() {
 
+  const storage = new Storage({
+    // maximum capacity, default 1000 key-ids
+    size: 1000,
+
+    // Use AsyncStorage for RN apps, or window.localStorage for web apps.
+    // If storageBackend is not set, data will be lost after reload.
+    storageBackend: AsyncStorage, // for web: window.localStorage
+
+    // expire time, default: 1 day (1000 * 3600 * 24 milliseconds).
+    // can be null, which means never expire.
+    defaultExpires: null,
+
+    // cache data in the memory. default is true.
+    enableCache: true
+  });
 
   // application states array obj
   const [ListData, SetListData] = useState([])
   const [input, setInput] = useState('')
+  const [starting, setStarting] = useState(true)
   // reference to text input 
   // const txtInput = useRef()
   // function to add value of input to ListData (add an item to list)
@@ -24,6 +42,34 @@ export default function App() {
     // useEffect Hook
     // useEffect(() => console.log("updating"), [ListData])
   }
+
+  // storage functions
+  const saveData = () => {
+    storage.save({
+      key: 'localListData',
+      data: JSON.stringify(ListData)
+    });
+  }
+  const loadData = () => {
+    storage.load({
+      key: 'localListData'
+    })
+    .then( (data) => {
+      SetListData( JSON.parse(data) )
+    })
+  }
+
+  useEffect(() => {
+    // sortList(ListData);
+    saveData()
+  }, [ListData])
+
+  useEffect(() => {
+    if (starting) {
+      loadData()
+      setStarting(false)
+    }
+  })
 
   const deleteItem = (itemId) => {
     /*
