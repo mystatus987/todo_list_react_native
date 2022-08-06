@@ -43,7 +43,7 @@ export function HomeScreen(props) {
     let newItem = {
       id: newId,
       name: input,
-      status: false,
+      status: "1",
     };
     let newList = ListData.concat(newItem);
     SetListData(newList);

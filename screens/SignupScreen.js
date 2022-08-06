@@ -65,7 +65,6 @@ import {
   
     return (
       <KeyboardAvoidingView style={styles.signupView} behavior="padding">
-        <Text>Sign up</Text>
         <View style={styles.signupForm}>
           <Text style={styles.label}>Email</Text>
           <TextInput

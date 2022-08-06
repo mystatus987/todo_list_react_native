@@ -8,11 +8,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { HomeScreen } from "./screens/HomeScreen";
 import { SigninScreen } from "./screens/SigninScreen";
 import { SignupScreen } from "./screens/SignupScreen";
-
+import { HistoryScreen } from "./screens/HistoryScreen";
 // firebase config
 import { firebaseConfig } from "./config/Config";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 // initialise firebase app
 initializeApp(firebaseConfig);
 
@@ -31,15 +31,25 @@ export default function App() {
         console.log(error);
       });
   };
+
+  const signin = (email, password) => {
+    const authObj = getAuth();
+    signInWithEmailAndPassword(authObj, email, password)
+      .then((userCredential) => setUser(userCredential.user))
+      .catch((error) => console.log(error))
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator>
         {/* to pass additional props we have to change our Stack.screen component */}
         <Stack.Screen name="Signup">
-          {(props) => <SignupScreen {...props} signup={register} auth={user} />}
+          { ( props) => <SignupScreen {...props} signup={register} auth={user}/> }
         </Stack.Screen>
-        <Stack.Screen name="Signin" component={SigninScreen} />
+        <Stack.Screen name="Signin">
+          { ( props ) => <SigninScreen {...props} signin={signin} auth={user}  /> }
+        </Stack.Screen>
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Complete History" component={HistoryScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
