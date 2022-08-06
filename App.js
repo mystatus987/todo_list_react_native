@@ -4,6 +4,11 @@ import { Task } from './components/Task';
 import { EmptyList } from './components/EmptyList';
 import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// firebase config 
+import { firebaseConfig } from './config/Config';
+import { initializeApp } from "firebase/app";
+// Initialize Firebase
+initializeApp(firebaseConfig);
 export default function App() {
 
   const storage = new Storage({
