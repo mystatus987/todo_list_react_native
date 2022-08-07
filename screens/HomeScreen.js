@@ -12,8 +12,16 @@ import { Task } from "../components/Task";
 import { EmptyList } from "../components/EmptyList";
 import Storage from "react-native-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { useNavigation } from '@react-navigation/native'
 export function HomeScreen(props) {
+
+  const navigation = useNavigation();
+
+  useEffect( () => {
+    if( !props.auth ) {
+      navigation.reset( { index: 0, routes: [ {name: "Signup"} ]} )
+    }  
+  }, [props.auth] )
   const storage = new Storage({
     // maximum capacity, default 1000 key-ids
     size: 1000,

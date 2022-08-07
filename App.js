@@ -1,18 +1,17 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useState, useEffect } from "react";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
 import { HomeScreen } from "./screens/HomeScreen";
 import { SigninScreen } from "./screens/SigninScreen";
 import { SignupScreen } from "./screens/SignupScreen";
 import { HistoryScreen } from "./screens/HistoryScreen";
+import { SignoutButton } from "./components/SignoutButton";
 // firebase config
 import { firebaseConfig } from "./config/Config";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,signOut,onAuthStateChanged } from "firebase/auth";
 // initialise firebase app
 initializeApp(firebaseConfig);
 
@@ -20,7 +19,14 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState();
-
+  const authObj = getAuth();
+  onAuthStateChanged( authObj,(user) => {
+    if(user){
+      setUser(user)
+    }else{
+      setUser(null)
+    }
+  })
   const register = (email, password) => {
     const authObj = getAuth();
     createUserWithEmailAndPassword(authObj, email, password)
@@ -33,22 +39,37 @@ export default function App() {
   };
 
   const signin = (email, password) => {
-    const authObj = getAuth();
     signInWithEmailAndPassword(authObj, email, password)
       .then((userCredential) => setUser(userCredential.user))
       .catch((error) => console.log(error))
   }
+
+  const signout = () => {
+    signOut(authObj)
+      .then(() => {
+        console.log("sign out successful");
+      })
+      .catch(() => {
+        console.log("sign out errors");
+      })
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
         {/* to pass additional props we have to change our Stack.screen component */}
         <Stack.Screen name="Signup">
-          { ( props) => <SignupScreen {...props} signup={register} auth={user}/> }
+          {(props) => <SignupScreen {...props} signup={register} auth={user} />}
         </Stack.Screen>
         <Stack.Screen name="Signin">
-          { ( props ) => <SigninScreen {...props} signin={signin} auth={user}  /> }
+          {(props) => <SigninScreen {...props} signin={signin} auth={user} />}
         </Stack.Screen>
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home" options={{
+          headerTitle: "App Home",
+          headerRight: (props) => <SignoutButton {...props} signout={signout} />
+        }}>
+          {(props) => <HomeScreen {...props} auth={user} />}
+        </Stack.Screen>
         <Stack.Screen name="Complete History" component={HistoryScreen} />
       </Stack.Navigator>
     </NavigationContainer>
