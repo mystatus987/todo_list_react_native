@@ -10,8 +10,13 @@ export function Task(props) {
         {/* `display task ` */}
         <Text style={styles.itemText}>{props.item.name}</Text>
       </View>
+      <TouchableOpacity onPress={ () => props.complete(props.item.id)}>
+        <View style={styles.buttonStatus}>
+          <Text>Complete</Text>
+        </View>
+      </TouchableOpacity>
       <TouchableOpacity onPress={ () => props.remove(props.item.id)}>
-        <View style={styles.circular}>
+        <View style={styles.buttonStatus}>
           <Text>DELETE</Text>
         </View>
       </TouchableOpacity>
@@ -46,9 +51,9 @@ const styles = StyleSheet.create({
   itemText: {
     maxWidth: '80%',
   },
-  circular: {
-    borderColor: '#55BCF6',
-    borderWidth: 2,
+  buttonStatus: {
+    backgroundColor: '#E8EAED',
+    // borderWidth: 1,
     borderRadius: 5,
   },
 });

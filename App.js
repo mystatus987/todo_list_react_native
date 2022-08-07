@@ -8,10 +8,11 @@ import { SigninScreen } from "./screens/SigninScreen";
 import { SignupScreen } from "./screens/SignupScreen";
 import { HistoryScreen } from "./screens/HistoryScreen";
 import { SignoutButton } from "./components/SignoutButton";
+import { WelcomeScreen } from "./screens/WelcomeScreen"
 // firebase config
 import { firebaseConfig } from "./config/Config";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,signOut,onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 // initialise firebase app
 initializeApp(firebaseConfig);
 
@@ -20,10 +21,10 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [user, setUser] = useState();
   const authObj = getAuth();
-  onAuthStateChanged( authObj,(user) => {
-    if(user){
+  onAuthStateChanged(authObj, (user) => {
+    if (user) {
       setUser(user)
-    }else{
+    } else {
       setUser(null)
     }
   })
@@ -58,19 +59,25 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {/* to pass additional props we have to change our Stack.screen component */}
-        <Stack.Screen name="Signup">
+        <Stack.Screen name="Hello!" component={WelcomeScreen} ></Stack.Screen>
+        <Stack.Screen name="Signup" options={{
+          headerTitleStyle:{
+             fontWeight:'bold',
+          },
+          headerBackVisible:false
+        }}>
           {(props) => <SignupScreen {...props} signup={register} auth={user} />}
         </Stack.Screen>
         <Stack.Screen name="Signin">
           {(props) => <SigninScreen {...props} signin={signin} auth={user} />}
         </Stack.Screen>
         <Stack.Screen name="Home" options={{
-          headerTitle: "App Home",
+           title: "YOUR TASKS",
           headerRight: (props) => <SignoutButton {...props} signout={signout} />
         }}>
           {(props) => <HomeScreen {...props} auth={user} />}
         </Stack.Screen>
-        <Stack.Screen name="Complete History" component={HistoryScreen} />
+        <Stack.Screen name="History" options={{ headerTitle:"Complete Tasks" }} component={HistoryScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

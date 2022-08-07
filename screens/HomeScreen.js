@@ -12,16 +12,16 @@ import { Task } from "../components/Task";
 import { EmptyList } from "../components/EmptyList";
 import Storage from "react-native-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
 export function HomeScreen(props) {
 
   const navigation = useNavigation();
 
-  useEffect( () => {
-    if( !props.auth ) {
-      navigation.reset( { index: 0, routes: [ {name: "Signup"} ]} )
-    }  
-  }, [props.auth] )
+  useEffect(() => {
+    if (!props.auth) {
+      navigation.reset({ index: 0, routes: [{ name: "Signup" }] })
+    }
+  }, [props.auth])
   const storage = new Storage({
     // maximum capacity, default 1000 key-ids
     size: 1000,
@@ -42,6 +42,7 @@ export function HomeScreen(props) {
   const [ListData, SetListData] = useState([]);
   const [input, setInput] = useState("");
   const [starting, setStarting] = useState(true);
+
   // reference to text input
   // const txtInput = useRef()
   // function to add value of input to ListData (add an item to list)
@@ -54,11 +55,16 @@ export function HomeScreen(props) {
       status: "1",
     };
     let newList = ListData.concat(newItem);
-    SetListData(newList);
-    // useEffect Hook
-    // useEffect(() => console.log("updating"), [ListData])
+    newList.filter((item) => {
+      if (item.status == '1') {
+        return SetListData(newList);
+      } else {
+        // check the object 
+        // console.log(newList)
+      }
+    });
   };
-
+  
   // storage functions
   const saveData = () => {
     storage.save({
@@ -88,6 +94,28 @@ export function HomeScreen(props) {
     }
   });
 
+  const completeItem = (itemId) => {
+    const newList = ListData.filter((item) => {
+      if (item.id == itemId) {
+        return item.status = "0";
+      }
+    });
+    SetListData(newList);
+    console.log(newList);
+  }
+
+  const displayComplete = () => {
+    let newList = ListData.concat(newItem);
+    newList.filter((item) => {
+      if (item.status == '0') {
+        return SetListData(newList);
+      } else {
+        // check the object 
+        // console.log(newList)
+      }
+    });
+  }
+
   const deleteItem = (itemId) => {
     /*
     find the item id 
@@ -105,13 +133,16 @@ export function HomeScreen(props) {
   };
 
   //function to render list item
-  const renderItem = ({ item }) => <Task item={item} remove={deleteItem} />;
+  const renderItem = ({ item }) => <Task item={item} remove={deleteItem} complete={completeItem}/>;
 
   return (
     <View style={styles.container}>
       {/* Today's Tasks */}
       <View style={styles.tasksWrapper}>
         <Text style={styles.title}>2Do list</Text>
+        <TouchableOpacity style={styles.historyButton} onPress={() => navigation.navigate('History')}>
+          <Text>Go to History</Text>
+        </TouchableOpacity>
         <View style={styles.items}>
           <FlatList
             data={ListData}
@@ -186,5 +217,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "#C0C0C0",
     borderWidth: 1,
-  },
+  }, 
+  historyButton:{
+    alignItems: "center",
+    backgroundColor: "#47b8d6",
+    padding: 10,
+    margin: 10
+}
 });
