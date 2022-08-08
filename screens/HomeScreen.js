@@ -17,6 +17,11 @@ export function HomeScreen(props) {
 
   const navigation = useNavigation();
 
+  // application states array obj
+  const [ListData, SetListData] = useState([]);
+  const [input, setInput] = useState("");
+  const [starting, setStarting] = useState(true);
+  
   useEffect(() => {
     if (!props.auth) {
       navigation.reset({ index: 0, routes: [{ name: "Signup" }] })
@@ -38,10 +43,6 @@ export function HomeScreen(props) {
     enableCache: true,
   });
 
-  // application states array obj
-  const [ListData, SetListData] = useState([]);
-  const [input, setInput] = useState("");
-  const [starting, setStarting] = useState(true);
 
   // reference to text input
   // const txtInput = useRef()

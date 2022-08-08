@@ -54,7 +54,7 @@ export default function App() {
         console.log("sign out errors");
       })
   }
-
+  
   return (
     <NavigationContainer>
       <Stack.Navigator>
