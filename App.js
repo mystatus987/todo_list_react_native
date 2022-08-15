@@ -98,6 +98,7 @@ export default function App() {
         // console.log(newList)
       }
     });
+    console.log(ListData)
   };
 
   // storage functions
@@ -167,7 +168,8 @@ export default function App() {
     console.log(itemId);
   };
   //function to render list item
-  const renderItem = ({ item }) => <Task item={item} remove={deleteItem} complete={completeItem} />;
+  // const renderItem = ({ item }) => <Task item={item} remove={deleteItem} complete={completeItem} />;
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -188,7 +190,7 @@ export default function App() {
           title: "YOUR TASKS",
           headerRight: (props) => <SignoutButton {...props} signout={signout} />
         }}>
-          {(props) => <HomeScreen {...props} auth={user} add={addItem} renderItem={renderItem} />}
+          {(props) => <HomeScreen {...props} auth={user} data={ListData} add={addItem} delete={deleteItem} complete={completeItem} />}
 
         </Stack.Screen>
         <Stack.Screen name="History" options={{ headerTitle: "Complete Tasks" }} component={HistoryScreen} />

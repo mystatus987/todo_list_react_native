@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export function Task(props) {
-
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>
@@ -17,7 +16,7 @@ export function Task(props) {
       </TouchableOpacity>
       <TouchableOpacity onPress={ () => props.remove(props.item.id)}>
         <View style={styles.buttonStatus}>
-          <Text>DELETE</Text>
+          <Text>Delete</Text>
         </View>
       </TouchableOpacity>
 

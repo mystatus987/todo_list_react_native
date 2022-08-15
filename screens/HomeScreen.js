@@ -22,6 +22,10 @@ export function HomeScreen(props) {
       navigation.reset({ index: 0, routes: [{ name: "Signup" }] })
     }
   }, [props.auth])
+  // check the data 
+  useEffect(() => {
+    // console.log(props.data)
+  },[props.data])
   // const storage = new Storage({
   //   // maximum capacity, default 1000 key-ids
   //   size: 1000,
@@ -133,7 +137,7 @@ export function HomeScreen(props) {
   // };
 
   // //function to render list item
-  const renderItem = ({ item }) => <Task item={item} remove={deleteItem} complete={completeItem}/>;
+  const renderItem = ({ item }) => <Task item={item} remove={props.delete} complete={props.complete}/>;
   
   return (
     <View style={styles.container}>
@@ -145,9 +149,12 @@ export function HomeScreen(props) {
         </TouchableOpacity>
         <View style={styles.items}>
           <FlatList
-            data={props.ListData}
-            keyExtractor={(props) => props.item.id}
-            renderItem={ props.renderItem}
+          // get data from app.js 
+            data={props.data}
+            // unique id for each items 
+            keyExtractor={(item) => item.id}
+            // render item and it automatically recive each item form data line 149.
+            renderItem={renderItem}
             ListEmptyComponent={EmptyList}
           />
         </View>
