@@ -12,18 +12,30 @@ import { WelcomeScreen } from "./screens/WelcomeScreen"
 import Storage from "react-native-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // firebase config
-import { firebaseConfig } from "./config/Config";
-import { initializeApp } from "firebase/app";
+// firebase config
+import { firebaseConfig } from './config/Config'
+import { initializeApp } from 'firebase/app'
+import { 
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  onSnapshot 
+} from 'firebase/firestore'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-// initialise firebase app and store ref in a variable 
-const FBapp = initializeApp(firebaseConfig);
-const db = getFirestore();
-// this create the firebase store references 
-const Stack = createNativeStackNavigator(FBapp);
 
+// initialise firebase app and store ref in a variable
+const FBapp = initializeApp(firebaseConfig)
+// initialise Firestore
+const db = getFirestore( FBapp)
+
+
+const Stack = createNativeStackNavigator();
 export default function App() {
   const [user, setUser] = useState();
+  // state to store data
+  const [appData, setAppData ] = useState()
+
   const authObj = getAuth();
   onAuthStateChanged(authObj, (user) => {
     if (user) {
@@ -103,7 +115,6 @@ export default function App() {
     console.log(ListData)
   };
 
-  // add data in fire store 
   const addData = async ( FScollection, data ) => {
     // add data to a collection with FS generated id
     const ref = await addDoc( collection(db,FScollection), data )
@@ -176,8 +187,7 @@ export default function App() {
     SetListData(newList);
     console.log(itemId);
   };
-  //function to render list item
-  // const renderItem = ({ item }) => <Task item={item} remove={deleteItem} complete={completeItem} />;
+  
 
   return (
     <NavigationContainer>
@@ -199,7 +209,7 @@ export default function App() {
           title: "YOUR TASKS",
           headerRight: (props) => <SignoutButton {...props} signout={signout} />
         }}>
-          {(props) => <HomeScreen {...props} auth={user} data={ListData} add={addItem} delete={deleteItem} complete={completeItem} />}
+          {(props) => <HomeScreen {...props} auth={user} data={appData} add={addData} delete={deleteItem} complete={completeItem} />}
 
         </Stack.Screen>
         <Stack.Screen name="History" options={{ headerTitle: "Complete Tasks" }} component={HistoryScreen} />
