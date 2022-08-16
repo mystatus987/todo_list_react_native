@@ -15,10 +15,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { firebaseConfig } from "./config/Config";
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-// initialise firebase app
-initializeApp(firebaseConfig);
-
-const Stack = createNativeStackNavigator();
+import { getFirestore } from "firebase/firestore";
+// initialise firebase app and store ref in a variable 
+const FBapp = initializeApp(firebaseConfig);
+const db = getFirestore();
+// this create the firebase store references 
+const Stack = createNativeStackNavigator(FBapp);
 
 export default function App() {
   const [user, setUser] = useState();
@@ -100,6 +102,13 @@ export default function App() {
     });
     console.log(ListData)
   };
+
+  // add data in fire store 
+  const addData = async ( FScollection, data ) => {
+    // add data to a collection with FS generated id
+    const ref = await addDoc( collection(db,FScollection), data )
+    console.log( ref.id )
+  }
 
   // storage functions
   const saveData = () => {

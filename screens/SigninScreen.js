@@ -1,111 +1,132 @@
-import { Text, TextInput, View, StyleSheet, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
-import { useState, useEffect } from 'react'
-import { useNavigation } from '@react-navigation/native'
-
-export function SigninScreen(props) {
+import {
+    Text,
+    TextInput,
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+  } from "react-native";
+  import { useState, useEffect } from "react";
+  import { useNavigation } from "@react-navigation/native";
+  
+  export function SigninScreen(props) {
     const [email, setEmail] = useState("");
     const [validEmail, setValidEmail] = useState(false);
     const [password, setPassword] = useState("");
     const [validPassword, setValidPassword] = useState();
-    const navigation = useNavigation()
+    const navigation = useNavigation();
     const validateEmail = (emailStr) => {
-        // check if email contains '@' symbol
-        const atIndex = emailStr.indexOf("@");
-        if (atIndex > 0) {
-            return true;
-        } else {
-            return false;
-        }
+      // check if email contains '@' symbol
+      const atIndex = emailStr.indexOf("@");
+      if (atIndex > 0) {
+        return true;
+      } else {
+        return false;
+      }
     };
-
+  
     const validatePassword = (passwordStr) => {
-        // check the length of the password
-        const passLength = passwordStr.length;
-        if (passLength >= 8) {
-            return true;
-        } else {
-            return false;
-        }
+      // check the length of the password
+      const passLength = passwordStr.length;
+      if (passLength >= 8) {
+        return true;
+      } else {
+        return false;
+      }
     };
-    const signIn = (email, password) => props.signin(email, password)
-
+    const signIn = (email, password) => props.signin(email, password);
+  
     useEffect(() => {
-        // console.log( validateEmail( email ) )
-        if (validateEmail(email)) {
-            setValidEmail(true);
-        } else {
-            setValidEmail(false);
-        }
-        if (validatePassword(password)) {
-            setValidPassword(true);
-        } else {
-            setValidPassword(false);
-        }
+      // console.log( validateEmail( email ) )
+      if (validateEmail(email)) {
+        setValidEmail(true);
+      } else {
+        setValidEmail(false);
+      }
+      if (validatePassword(password)) {
+        setValidPassword(true);
+      } else {
+        setValidPassword(false);
+      }
     }, [email, password]);
-
+  
     useEffect(() => {
-        // auth is passed on as a prop from App.js
-        if (props.auth) {
-            // navigate to the Home screen
-            navigation.reset({ index: 0, routes: [{ name: "Home" }] })
-        }
-    }, [props.auth])
-
+      // auth is passed on as a prop from App.js
+      if (props.auth) {
+        // navigate to the Home screen
+        navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+      }
+    }, [props.auth]);
+  
     return (
-        <KeyboardAvoidingView style={styles.signupView} behavior='padding'>
-            <Text>Sign in</Text>
-            <View style={styles.signupForm}>
-                <Text style={styles.label}>Email</Text>
-                <TextInput style={styles.input} onChangeText={(value) => setEmail(value)} />
-                <Text>Password</Text>
-                <TextInput style={styles.input} secureTextEntry={true} onChangeText={(value) => setPassword(value)} />
-                <TouchableOpacity
-                    style={(validEmail && validPassword) ? styles.button : styles.buttonDisabled}
-                    disabled={(validEmail && validPassword) ? false : true}
-                    onPress={() => signIn(email, password)}
-                >
-                    <Text style={styles.buttonText}>Sign in</Text>
-                </TouchableOpacity>
-            </View>
-            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                <Text>Go to Sign up</Text>
-            </TouchableOpacity>
-        </KeyboardAvoidingView>
+      <KeyboardAvoidingView style={styles.signupView} behavior="padding">
+        <Text style={{ fontSize: 40, fontWeight: "bold" }}> Sign In</Text>
+        <View style={styles.signupForm}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => setEmail(value)}
+          />
+          <Text style={{ color: "#fff" }}>Password</Text>
+          <TextInput
+            style={styles.input}
+            secureTextEntry={true}
+            onChangeText={(value) => setPassword(value)}
+          />
+          <TouchableOpacity
+            style={
+              validEmail && validPassword ? styles.button : styles.buttonDisabled
+            }
+            disabled={validEmail && validPassword ? false : true}
+            onPress={() => signIn(email, password)}
+          >
+            <Text style={styles.buttonText}>Sign in</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+          <Text>Go to Sign up</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     );
-}
-
-const styles = StyleSheet.create({
+  }
+  
+  const styles = StyleSheet.create({
     signupView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
     },
     signupForm: {
-        backgroundColor: "lightblue",
-        width: "80%",
-        padding: 10,
+      backgroundColor: "#65b3f0",
+      width: "80%",
+      padding: 10,
+      borderRadius: 30,
     },
     label: {
-        marginVertical: 10,
+      marginVertical: 10,
+      color: "#fff",
     },
     input: {
-        backgroundColor: "#ffffff",
-        marginBottom: 15,
-        padding: 10,
+      backgroundColor: "#ffffff",
+      marginBottom: 15,
+      padding: 10,
     },
     form: {
-        alignItems: "flex-start",
+      alignItems: "flex-start",
     },
     button: {
-        backgroundColor: "black",
-        padding: 10,
+      backgroundColor: "green",
+      padding: 10,
+      borderRadius: 30,
     },
     buttonDisabled: {
-        backgroundColor: "#CCCCCC",
-        padding: 10,
+      backgroundColor: "#CCCCCC",
+      padding: 10,
+      borderRadius: 30,
     },
     buttonText: {
-        color: "white",
-        textAlign: "center",
+      color: "white",
+      textAlign: "center",
+      borderRadius: 30,
     },
-});
+  });
