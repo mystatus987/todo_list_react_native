@@ -24,13 +24,14 @@ export function HomeScreen(props) {
 
   // check the data 
   useEffect(() => {
-    console.log(props.data)
+    // console.log(props.data)
   },[props.data])
 
   const submit = ( path, data ) => {
     const dataObj = {name: data, date: new Date(), taskStatus: '1'}
     props.add( path, dataObj )
   }
+
 
   // //function to render list item
   const renderItem = ({ item }) => <Task item={item} remove={props.delete} complete={props.complete}/>;

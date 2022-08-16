@@ -15,31 +15,38 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // firebase config
 import { firebaseConfig } from './config/Config'
 import { initializeApp } from 'firebase/app'
-import { 
+import {
   getFirestore,
   collection,
   addDoc,
+  updateDoc,
   query,
-  onSnapshot 
+  where,
+  // recive the data on firestore 
+  onSnapshot,
+  doc
 } from 'firebase/firestore'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
 // initialise firebase app and store ref in a variable
 const FBapp = initializeApp(firebaseConfig)
 // initialise Firestore
-const db = getFirestore( FBapp)
+const db = getFirestore(FBapp)
 
 
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [user, setUser] = useState();
   // state to store data
-  const [appData, setAppData ] = useState()
+  const [appData, setAppData] = useState()
 
   const authObj = getAuth();
   onAuthStateChanged(authObj, (user) => {
     if (user) {
       setUser(user)
+      if (!appData) {
+        getData(`users/${user.uid}/items`)
+      }
     } else {
       setUser(null)
     }
@@ -112,15 +119,75 @@ export default function App() {
         // console.log(newList)
       }
     });
-    console.log(ListData)
+    // console.log(ListData)
   };
 
-  const addData = async ( FScollection, data ) => {
+  const addData = async (FScollection, data) => {
     // add data to a collection with FS generated id
-    const ref = await addDoc( collection(db,FScollection), data )
-    console.log( ref.id )
+    const ref = await addDoc(collection(db, FScollection), data)
+    // console.log(ref.id)
+  }
+  const getData = (FScollection) => {
+    const FSquery = query(collection(db, FScollection), where("taskStatus", "==", '1'))
+    console.log(FScollection)
+    const unsubscribe = onSnapshot(FSquery, (querySnapshot) => {
+      let FSdata = []
+      querySnapshot.forEach((doc) => {
+        let item = {}
+        item = doc.data()
+        item.id = doc.id
+        FSdata.push(item)
+      })
+      setAppData(FSdata)
+    })
   }
 
+
+  // update status 
+  // const completeItem = () => {
+  //   const FScollectionRef = doc(db, "items", "0");
+  //   // set status as 0
+  //   await updateDoc(FScollectionRef, {
+  //     taskStatus: true
+  //   });
+  // }
+
+  const completeItem = (itemId) => {
+    const newList = ListData.filter((item) => {
+      if (item.id == itemId) {
+        return item.status = "0";
+      }
+    });
+    SetListData(newList);
+    console.log(newList);
+  }
+  const displayComplete = () => {
+    let newList = ListData.concat(newItem);
+    newList.filter((item) => {
+      if (item.status == '0') {
+        return SetListData(newList);
+      } else {
+        // check the object 
+        // console.log(newList)
+      }
+    });
+  }
+
+  const deleteItem = (itemId) => {
+    /*
+    find the item id 
+    remove item with the id from array (ListData)
+    setListData (new array)
+    */
+    const newList = ListData.filter((item) => {
+      if (item.id !== itemId) {
+        return item;
+      }
+    });
+    //  setListData (new array)
+    SetListData(newList);
+    console.log(itemId);
+  };
   // storage functions
   const saveData = () => {
     storage.save({
@@ -150,44 +217,6 @@ export default function App() {
     }
   });
 
-  const completeItem = (itemId) => {
-    const newList = ListData.filter((item) => {
-      if (item.id == itemId) {
-        return item.status = "0";
-      }
-    });
-    SetListData(newList);
-    console.log(newList);
-  }
-
-  const displayComplete = () => {
-    let newList = ListData.concat(newItem);
-    newList.filter((item) => {
-      if (item.status == '0') {
-        return SetListData(newList);
-      } else {
-        // check the object 
-        // console.log(newList)
-      }
-    });
-  }
-
-  const deleteItem = (itemId) => {
-    /*
-    find the item id 
-    remove item with the id from array (ListData)
-    setListData (new array)
-    */
-    const newList = ListData.filter((item) => {
-      if (item.id !== itemId) {
-        return item;
-      }
-    });
-    //  setListData (new array)
-    SetListData(newList);
-    console.log(itemId);
-  };
-  
 
   return (
     <NavigationContainer>
