@@ -7,48 +7,62 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { Task } from "../components/Task";
 import { EmptyList } from "../components/EmptyList";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 export function HomeScreen(props) {
-
   const navigation = useNavigation();
   const [input, setInput] = useState("");
-  
+
   useEffect(() => {
     if (!props.auth) {
-      navigation.reset({ index: 0, routes: [{ name: "Signup" }] })
+      navigation.reset({ index: 0, routes: [{ name: "Signup" }] });
     }
-  }, [props.auth])
+  }, [props.auth]);
 
-  // check the data 
+  // check the data
   useEffect(() => {
     // console.log(props.data)
-  },[props.data])
+  }, [props.data]);
 
-  const submit = ( path, data ) => {
-    const dataObj = {name: data, date: new Date(), taskStatus: '1'}
-    props.add( path, dataObj )
-  }
-
+  const submit = (path, data) => {
+    const dataObj = { name: data, date: new Date(), taskStatus: "1" };
+    props.add(path, dataObj);
+  };
 
   // //function to render list item
-  const renderItem = ({ item }) => <Task item={item} remove={props.delete} complete={props.complete}/>;
-  
+  const renderItem = ({ item }) => (
+    <Task item={item} remove={props.delete} complete={props.complete} />
+  );
+
   return (
     <View style={styles.container}>
       {/* Today's Tasks */}
       <View style={styles.tasksWrapper}>
         <Text style={styles.title}>2Do list</Text>
-        <TouchableOpacity style={styles.historyButton} onPress={() => navigation.navigate('History')}>
-          <Text>Go to History</Text>
+        <TouchableOpacity
+          style={styles.historyButton}
+          onPress={() => navigation.navigate("History")}
+        >
+          <Text
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              color: "#fff",
+            }}
+          >
+            Go to History
+          </Text>
         </TouchableOpacity>
+
         <View style={styles.items}>
           <FlatList
-          // get data from app.js 
+            // get data from app.js
             data={props.data}
-            // unique id for each items 
+            // unique id for each items
             keyExtractor={(item) => item.id}
             // render item and it automatically recive each item form data line 149.
             renderItem={renderItem}
@@ -69,7 +83,11 @@ export function HomeScreen(props) {
           onChangeText={(value) => setInput(value)}
         />
         {/* data object */}
-        <TouchableOpacity  onPress={ () => { submit(`users/${props.auth.uid}/items`,input) }}>
+        <TouchableOpacity
+          onPress={() => {
+            submit(`users/${props.auth.uid}/items`, input);
+          }}
+        >
           <View style={styles.addWrapper}>
             <Text style={styles.addText}>+</Text>
           </View>
@@ -83,6 +101,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#E8EAED",
+    justifyContent: "space-between",
   },
   tasksWrapper: {
     paddingTop: 80,
@@ -122,11 +141,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "#C0C0C0",
     borderWidth: 1,
-  }, 
-  historyButton:{
-    alignItems: "center",
-    backgroundColor: "#47b8d6",
+  },
+  historyButton: {
     padding: 10,
-    margin: 10
-}
+    margin: 10,
+    width: "100%",
+    backgroundColor: "#0d47a1",
+    padding: 10,
+    borderRadius: 40,
+    marginTop: 30,
+  },
 });

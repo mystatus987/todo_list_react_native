@@ -65,13 +65,20 @@ export function SignupScreen(props) {
 
   return (
     <KeyboardAvoidingView style={styles.signupView} behavior="padding">
+      <Text style={{ fontSize: 40, fontWeight: "bold" }}>
+        {" "}
+        Welcome! Sign up for new account
+      </Text>
+      <Text style={{ fontSize: 16, color: "gray", marginTop: 20 }}>
+        Sign up to continue
+      </Text>
       <View style={styles.signupForm}>
         <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}
           onChangeText={(value) => setEmail(value)}
         />
-        <Text style={{ color: "#fff" }}>Password</Text>
+        <Text style={styles.label}>Password</Text>
         <TextInput
           style={styles.input}
           secureTextEntry={true}
@@ -90,7 +97,7 @@ export function SignupScreen(props) {
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={() => navigation.navigate("Signin")}>
-        <Text>Go to Sign in</Text>
+        <Text>Already have an account?</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
@@ -98,24 +105,27 @@ export function SignupScreen(props) {
 
 const styles = StyleSheet.create({
   signupView: {
+    backgroundColor: "#FFF",
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   signupForm: {
-    backgroundColor: "#65b3f0",
+    backgroundColor: "FFF",
     width: "80%",
     padding: 10,
     borderRadius: 30,
   },
   label: {
     marginVertical: 10,
-    color: "#fff",
+    borderBottomColor: "#ddd",
   },
   input: {
-    backgroundColor: "#ffffff",
     marginBottom: 15,
     padding: 10,
+    borderBottomColor: "#ddd",
+    borderBottomWidth: 1,
+    paddingBottom: 20,
   },
   form: {
     alignItems: "flex-start",
