@@ -82,7 +82,8 @@ export function HomeScreen(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E8EAED",
+    backgroundColor: "#FF8FB1",
+    justifyContent: "space-between",
   },
   tasksWrapper: {
     paddingTop: 80,
@@ -111,22 +112,25 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     borderColor: "#C0C0C0",
     borderWidth: 1,
-    width: 250,
+    width: 300,
   },
   addWrapper: {
     width: 60,
     height: 60,
-    backgroundColor: "#FFF",
+    backgroundColor: "#B2A4FF",
     borderRadius: 60,
     justifyContent: "center",
     alignItems: "center",
     borderColor: "#C0C0C0",
     borderWidth: 1,
-  }, 
-  historyButton:{
-    alignItems: "center",
-    backgroundColor: "#47b8d6",
+  },
+  historyButton: {
+    padding: 1,
+    margin: 1,
+    width: "100%",
+    backgroundColor: "#B2A4FF",
     padding: 10,
-    margin: 10
-}
+    borderRadius: 40,
+    marginTop: 30,
+  },
 });

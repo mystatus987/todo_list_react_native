@@ -24,7 +24,8 @@ import {
   where,
   // recive the data on firestore 
   onSnapshot,
-  doc
+  doc,
+  setDoc
 } from 'firebase/firestore'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
@@ -129,7 +130,7 @@ export default function App() {
   }
   const getData = (FScollection) => {
     const FSquery = query(collection(db, FScollection), where("taskStatus", "==", '1'))
-    console.log(FScollection)
+    // console.log(FScollection)
     const unsubscribe = onSnapshot(FSquery, (querySnapshot) => {
       let FSdata = []
       querySnapshot.forEach((doc) => {
@@ -144,23 +145,24 @@ export default function App() {
 
 
   // update status 
-  // const completeItem = () => {
-  //   const FScollectionRef = doc(db, "items", "0");
-  //   // set status as 0
-  //   await updateDoc(FScollectionRef, {
-  //     taskStatus: true
-  //   });
-  // }
-
-  const completeItem = (itemId) => {
-    const newList = ListData.filter((item) => {
-      if (item.id == itemId) {
-        return item.status = "0";
-      }
+  const completeItem = async (FScollection,data) => {
+    const collectionRef = doc(collection(db,FScollection, 'items'));
+    await setDoc(collectionRef, data);
+    // set status as 0
+    await updateDoc(collectionRef, {
+      taskStatus: '0'
     });
-    SetListData(newList);
-    console.log(newList);
   }
+
+  // const completeItem = (itemId) => {
+  //   const newList = ListData.filter((item) => {
+  //     if (item.id == itemId) {
+  //       return item.status = "0";
+  //     }
+  //   });
+  //   SetListData(newList);
+  //   console.log(newList);
+  // }
   const displayComplete = () => {
     let newList = ListData.concat(newItem);
     newList.filter((item) => {
@@ -173,20 +175,9 @@ export default function App() {
     });
   }
 
-  const deleteItem = (itemId) => {
-    /*
-    find the item id 
-    remove item with the id from array (ListData)
-    setListData (new array)
-    */
-    const newList = ListData.filter((item) => {
-      if (item.id !== itemId) {
-        return item;
-      }
-    });
-    //  setListData (new array)
-    SetListData(newList);
-    console.log(itemId);
+  const deleteItem = async(data,FScollection) => {
+    const docRef = doc(collection(db,FScollection,data));
+    await deleteDoc(docRef);
   };
   // storage functions
   const saveData = () => {
@@ -241,7 +232,7 @@ export default function App() {
           {(props) => <HomeScreen {...props} auth={user} data={appData} add={addData} delete={deleteItem} complete={completeItem} />}
 
         </Stack.Screen>
-        <Stack.Screen name="History" options={{ headerTitle: "Complete Tasks" }} component={HistoryScreen} />
+        <Stack.Screen name="History" options={{ headerTitle: "Complete Tasks" }} component={HistoryScreen} data={appData} />
       </Stack.Navigator>
     </NavigationContainer>
   );

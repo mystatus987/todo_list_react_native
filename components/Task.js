@@ -1,7 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-
+import { useState, useEffect } from "react";
 export function Task(props) {
+   // check the data 
+   useEffect(() => {
+    // console.log(props)
+  })
+
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>
@@ -42,7 +47,7 @@ const styles = StyleSheet.create({
   circule: {
     width: 24,
     height: 24,
-    backgroundColor: '#55BCF6',
+    backgroundColor: '#B2A4FF',
     opacity: 0.4,
     borderRadius: 50,
     marginRight: 15,
@@ -51,8 +56,10 @@ const styles = StyleSheet.create({
     maxWidth: '80%',
   },
   buttonStatus: {
-    backgroundColor: '#E8EAED',
-    // borderWidth: 1,
+    backgroundColor: '#B1E1FF',
+    borderStyle: 'solid',
+    borderColor: '#B1E1FF',
+    borderWidth: 1,
     borderRadius: 5,
   },
 });
