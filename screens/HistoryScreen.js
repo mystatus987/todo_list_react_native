@@ -1,15 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { CompleteTask } from "../components/CompleteTask";
 export function HistoryScreen(props) {
+  const renderItem = ({ item }) => <CompleteTask item={item} />;
   return (
-    //     <View style={styles.item}>
-    //     <View style={styles.itemLeft}>
-    //     <View style={styles.circule}></View>
-    //     {/* `display task ` */}
-    //     <Text style={styles.itemText} >{props.item.name}</Text>
-    //   </View>
-    // </View>
-    <View style = {styles.container}><Text>History page</Text></View>
+
+    <View style={styles.container}>
+      <View style={styles.tasksWrapper}>
+        <Text style={styles.title}>Complete List!</Text>
+        <View style={styles.items}>
+          <FlatList
+            // get data from app.js 
+            data={props.data}
+            // unique id for each items 
+            keyExtractor={(item) => item.id}
+            // render item and it automatically recive each item form data line 149.
+            renderItem={renderItem}
+          />
+        </View>
+      </View>
+    </View>
   )
 }
 const styles = StyleSheet.create({
@@ -18,29 +28,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF8FB1",
     justifyContent: "space-even",
   },
-  item: {
-    backgroundColor: '#FFF',
-    padding: 15,
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+  items: {
+    marginTop: 30,
   },
-  itemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap'
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    // marginTop: 30
   },
-  circule: {
-    width: 24,
-    height: 24,
-    backgroundColor: '#55BCF6',
-    opacity: 0.4,
-    borderRadius: 50,
-    marginRight: 15,
-  },
-  itemText: {
-    maxWidth: '80%',
+  tasksWrapper: {
+    paddingTop: 80,
+    paddingHorizontal: 20,
   },
 });

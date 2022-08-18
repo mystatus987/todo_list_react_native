@@ -8,13 +8,10 @@ import { SigninScreen } from "./screens/SigninScreen";
 import { SignupScreen } from "./screens/SignupScreen";
 import { HistoryScreen } from "./screens/HistoryScreen";
 import { SignoutButton } from "./components/SignoutButton";
-import { WelcomeScreen } from "./screens/WelcomeScreen"
-import Storage from "react-native-storage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { WelcomeScreen } from "./screens/WelcomeScreen";
 // firebase config
-// firebase config
-import { firebaseConfig } from './config/Config'
-import { initializeApp } from 'firebase/app'
+import { firebaseConfig } from './config/Config';
+import { initializeApp } from 'firebase/app';
 import {
   getFirestore,
   collection,
@@ -25,7 +22,7 @@ import {
   // recive the data on firestore 
   onSnapshot,
   doc,
-  deleteDoc 
+  deleteDoc
 } from 'firebase/firestore'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
@@ -47,6 +44,7 @@ export default function App() {
       setUser(user)
       if (!appData) {
         getData(`users/${user.uid}/items`)
+        getCompleteData(`users/${user.uid}/items`)
       }
     } else {
       setUser(null)
@@ -79,55 +77,16 @@ export default function App() {
       })
   }
 
-  const storage = new Storage({
-    // maximum capacity, default 1000 key-ids
-    size: 1000,
-
-    // Use AsyncStorage for RN apps, or window.localStorage for web apps.
-    // If storageBackend is not set, data will be lost after reload.
-    storageBackend: AsyncStorage, // for web: window.localStorage
-
-    // expire time, default: 1 day (1000 * 3600 * 24 milliseconds).
-    // can be null, which means never expire.
-    defaultExpires: null,
-
-    // cache data in the memory. default is true.
-    enableCache: true,
-  });
-
   // application states array obj
   const [ListData, SetListData] = useState([]);
-  const [starting, setStarting] = useState(true);
 
-  // reference to text input
-  // const txtInput = useRef()
-  // function to add value of input to ListData (add an item to list)
-  const addItem = (input) => {
-    // use timestamp to create unique id
-    console.log(input)
-    let newId = new Date().getTime();
-    let newItem = {
-      id: newId,
-      name: input,
-      status: "1",
-    };
-    let newList = ListData.concat(newItem);
-    newList.filter((item) => {
-      if (item.status == '1') {
-        return SetListData(newList);
-      } else {
-        // check the object 
-        // console.log(newList)
-      }
-    });
-    // console.log(ListData)
-  };
-
+  // add function 
   const addData = async (FScollection, data) => {
     // add data to a collection with FS generated id
     const ref = await addDoc(collection(db, FScollection), data)
     // console.log(ref.id)
   }
+  // get all todo list where status 1
   const getData = (FScollection) => {
     const FSquery = query(collection(db, FScollection), where("taskStatus", "==", '1'))
     // console.log(FScollection)
@@ -142,11 +101,21 @@ export default function App() {
       setAppData(FSdata)
     })
   }
-  // const updateItem = (itemId) => {
-  //   const itemRef = doc(db, `users/${user.uid}/items`, itemId)
-  //   await updateDoc(itemRef, { status: 0 })
-  // }
-
+  // get all todo list where status 0
+  const getCompleteData = (FScollection) => {
+    const FSquery = query(collection(db, FScollection), where("taskStatus", "==", '0'))
+    // console.log(FScollection)
+    const unsubscribe = onSnapshot(FSquery, (querySnapshot) => {
+      let FSdata = []
+      querySnapshot.forEach((doc) => {
+        let item = {}
+        item = doc.data()
+        item.id = doc.id
+        FSdata.push(item)
+      })
+      setAppData(FSdata)
+    })
+  }
   // update status 
   const completeItem = async (itemId) => {
     // when you update you have to pass the which user update items and get item id to parameter 
@@ -158,60 +127,11 @@ export default function App() {
     });
   }
 
-  // const completeItem = (itemId) => {
-  //   const newList = ListData.filter((item) => {
-  //     if (item.id == itemId) {
-  //       return item.status = "0";
-  //     }
-  //   });
-  //   SetListData(newList);
-  //   console.log(newList);
-  // }
-  const displayComplete = () => {
-    let newList = ListData.concat(newItem);
-    newList.filter((item) => {
-      if (item.status == '0') {
-        return SetListData(newList);
-      } else {
-        // check the object 
-        // console.log(newList)
-      }
-    });
-  }
-
+  // delete todo list function 
   const deleteItem = async (itemId) => {
     const collectionRef = doc(db, `users/${user.uid}/items`, itemId)
     await deleteDoc(collectionRef);
   };
-  // storage functions
-  const saveData = () => {
-    storage.save({
-      key: "localListData",
-      data: JSON.stringify(ListData),
-    });
-  };
-  const loadData = () => {
-    storage
-      .load({
-        key: "localListData",
-      })
-      .then((data) => {
-        SetListData(JSON.parse(data));
-      });
-  };
-
-  useEffect(() => {
-    // sortList(ListData);
-    saveData();
-  }, [ListData]);
-
-  useEffect(() => {
-    if (starting) {
-      loadData();
-      setStarting(false);
-    }
-  });
-
 
   return (
     <NavigationContainer>
@@ -236,7 +156,9 @@ export default function App() {
           {(props) => <HomeScreen {...props} auth={user} data={appData} add={addData} delete={deleteItem} complete={completeItem} />}
 
         </Stack.Screen>
-        <Stack.Screen name="History" options={{ headerTitle: "Complete Tasks" }} component={HistoryScreen} data={appData} />
+        <Stack.Screen name="History" options={{ headerTitle: "Complete Tasks" }}>
+          {(props) => <HistoryScreen {...props} auth={user} data={appData} />}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
