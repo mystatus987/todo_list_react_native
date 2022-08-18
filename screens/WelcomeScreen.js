@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native'
 export function WelcomeScreen() {
     const navigation = useNavigation();
     return (
-        <View>
+        <View style = {styles.container}>
             <View  style = {styles.imgCenter}>
                 <Image  style={styles.welcomeImg} source={require('../assets/welcomeImg.png')} />
             </View>
@@ -26,6 +26,11 @@ export function WelcomeScreen() {
 } 
 
 const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        backgroundColor: "#FF8FB1",
+        justifyContent: "space-even",
+    },
     title: {
         marginTop: 20,
         fontSize: 25,
@@ -43,7 +48,7 @@ const styles = StyleSheet.create({
     },
     startButton:{
         alignItems: "center",
-        backgroundColor: "#47b8d6",
+        backgroundColor: "#B2A4FF",
         padding: 10,
         margin: 10
     }
