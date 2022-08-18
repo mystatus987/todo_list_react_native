@@ -68,7 +68,7 @@ export function HomeScreen(props) {
           placeholder={"Write a task"}
           onChangeText={(value) => setInput(value)}
         />
-        {/* data object */}
+        {/* data object `users/${props.auth.uid}/items` this is FScollection*/}
         <TouchableOpacity  onPress={ () => { submit(`users/${props.auth.uid}/items`,input) }}>
           <View style={styles.addWrapper}>
             <Text style={styles.addText}>+</Text>

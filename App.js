@@ -25,7 +25,7 @@ import {
   // recive the data on firestore 
   onSnapshot,
   doc,
-  setDoc
+  deleteDoc 
 } from 'firebase/firestore'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
@@ -142,12 +142,16 @@ export default function App() {
       setAppData(FSdata)
     })
   }
-
+  // const updateItem = (itemId) => {
+  //   const itemRef = doc(db, `users/${user.uid}/items`, itemId)
+  //   await updateDoc(itemRef, { status: 0 })
+  // }
 
   // update status 
-  const completeItem = async (FScollection,data) => {
-    const collectionRef = doc(collection(db,FScollection, 'items'));
-    await setDoc(collectionRef, data);
+  const completeItem = async (itemId) => {
+    // when you update you have to pass the which user update items and get item id to parameter 
+    const collectionRef = doc(db, `users/${user.uid}/items`, itemId)
+    // await setDoc(collectionRef, data);
     // set status as 0
     await updateDoc(collectionRef, {
       taskStatus: '0'
@@ -175,9 +179,9 @@ export default function App() {
     });
   }
 
-  const deleteItem = async(data,FScollection) => {
-    const docRef = doc(collection(db,FScollection,data));
-    await deleteDoc(docRef);
+  const deleteItem = async (itemId) => {
+    const collectionRef = doc(db, `users/${user.uid}/items`, itemId)
+    await deleteDoc(collectionRef);
   };
   // storage functions
   const saveData = () => {
